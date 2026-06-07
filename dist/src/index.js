@@ -3,8 +3,10 @@ import "dotenv/config";
 const app = express();
 const port = process.env.PORT ?? 4000;
 app.use(express.json());
+// Serve static frontend for mobile PPG (camera-based pulse measurement)
+app.use(express.static("public"));
 app.get("/", (_req, res) => {
-    res.json({ ok: true, time: new Date().toISOString() });
+    res.sendFile("index.html", { root: "public" });
 });
 // Placeholder route until Prisma client is configured
 app.get("/patients/count", (_req, res) => {
