@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "nodemon --watch src --exec \"node --loader ts-node/esm src/index.ts\"",
     "build": "tsc -p tsconfig.json",
-    "vercel-build": "mkdir -p .vercel/output/static && cp -r public/* .vercel/output/static/ || true",
     "start": "node dist/index.js",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate"
