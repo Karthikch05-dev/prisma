@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+enum UserRole {
+  PATIENT
+  CAREGIVER
+}
+
+enum AlertType {
+  TACHYCARDIA
+  BRADYCARDIA
+  CUSTOM
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  PENDING
+  RESOLVED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  createdAt    DateTime @default(now())
+
+  patient      Patient?
+  caregiver    CaregiverProfile?
+}
+
+model CaregiverProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // which patients this caregiver can monitor
+  patients CaregiverPatient[]
+
+  notifications Notification[]
+}
+
+
+model CaregiverPatient {
+  caregiverId String
+  patientId   String
+
+  caregiver CaregiverProfile @relation(fields: [caregiverId], references: [id], onDelete: Cascade)
+  patient   Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@id([caregiverId, patientId])
+}
+
+model Patient {
+  id String @id @default(cuid())
+
+  userId              String? @unique
+  user                User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  fullName           String
+  age                Int
+  gender             String
+  contactNumber     String?
+  emergencyContact  String?
+  medicalHistory    String?
+
+  // default threshold limits
+  tachyLowBpm       Int     @default(120)
+  bradyHighBpm      Int     @default(60)
+
+  heartRateReadings HeartRateReading[]
+  alerts             Alert[]
+  createdAt          DateTime @default(now())
+
+  caregivers CaregiverPatient[]
+}
+
+model HeartRateReading {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  bpm       Int
+  timestamp DateTime @default(now())
+
+  alertLinks AlertReadingLink[]
+
+  @@index([patientId, timestamp])
+}
+
+model Alert {
+  id          String        @id @default(cuid())
+  patientId   String
+  patient     Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  bpm         Int
+  alertType   AlertType
+  severity    AlertSeverity
+  acknowledged Boolean      @default(false)
+  status      AlertStatus   @default(PENDING)
+  timestamp   DateTime     @default(now())
+
+  readings AlertReadingLink[]
+  notifications Notification[]
+
+  @@index([patientId, timestamp])
+  @@index([status])
+}
+
+model AlertReadingLink {
+  alertId   String
+  readingId String
+
+  alert   Alert              @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  reading HeartRateReading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+
+  @@id([alertId, readingId])
+}
+
+model Notification {
+  id           String   @id @default(cuid())
+  alertId      String
+  alert        Alert    @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  recipientId  String
+  recipient    CaregiverProfile @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  sentAt DateTime @default(now())
+
+  @@index([recipientId, sentAt])
+}
+
