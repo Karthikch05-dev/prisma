@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mobile Pulse via Camera</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Pulse via Camera (Mobile)</h1>
+      <p class="muted">Place your fingertip gently over the rear camera + flash.</p>
+      <div id="app">
+        <div class="metrics">
+          <div class="bpm">-- <span>BPM</span></div>
+          <div class="status">Idle</div>
+        </div>
+        <div class="controls">
+          <button id="startBtn">Start</button>
+          <button id="stopBtn" disabled>Stop</button>
+        </div>
+      </div>
+
+      <!-- Hidden video/canvas used for measurements -->
+      <video id="video" playsinline autoplay style="display:none"></video>
+      <canvas id="canvas" width="320" height="240" style="display:none"></canvas>
+
+      <script src="/ppg.js"></script>
+    </main>
+  </body>
+</html>
