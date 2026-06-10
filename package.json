@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --watch src --exec \"node --loader ts-node/esm src/index.ts\"",
-    "build": "",
+    "build": "tsc",
     "start": "node dist/index.js",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate"
