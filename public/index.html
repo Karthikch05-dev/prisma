@@ -3,28 +3,84 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Mobile Pulse via Camera</title>
+    <title>HeartBeat - Fingerprint Heart Rate Monitor</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main>
-      <h1>Pulse via Camera (Mobile)</h1>
-      <p class="muted">Place your fingertip gently over the rear camera + flash.</p>
-      <div id="app">
-        <div class="metrics">
-          <div class="bpm">-- <span>BPM</span></div>
-          <div class="status">Idle</div>
+      <div class="container">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">❤️</div>
+          <h1>HeartBeat</h1>
+          <p class="subtitle">Fingerprint Heart Rate Monitor</p>
         </div>
-        <div class="controls">
-          <button id="startBtn">Start</button>
-          <button id="stopBtn" disabled>Stop</button>
-        </div>
-      </div>
 
-      <!-- Hidden video/canvas used for measurements -->
-      <video id="video" playsinline autoplay style="display:none"></video>
-      <canvas id="canvas" width="320" height="240" style="display:none"></canvas>
+        <!-- Main Card -->
+        <div class="card">
+          <!-- Fingerprint Scanner Visual -->
+          <div class="fingerprint-container">
+            <div class="fingerprint-scanner" id="fingerprintScanner">
+              <div class="fingerprint-icon">👆</div>
+              <p class="scanner-text" id="scannerText">Ready to scan</p>
+            </div>
+          </div>
+
+          <!-- Metrics Display -->
+          <div class="metrics" id="metrics" style="display: none;">
+            <div class="metric-box">
+              <div class="metric-value" id="bpmValue">--</div>
+              <div class="metric-label">BPM</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-value" id="statusValue">Scanning</div>
+              <div class="metric-label">Status</div>
+            </div>
+          </div>
+
+          <!-- Pulse Animation -->
+          <div class="pulse-animation" id="pulseAnimation" style="display: none;">
+            <div class="pulse-wave"></div>
+            <div class="pulse-wave" style="animation-delay: 0.2s;"></div>
+            <div class="pulse-wave" style="animation-delay: 0.4s;"></div>
+          </div>
+
+          <!-- Control Buttons -->
+          <div class="button-group">
+            <button class="btn btn-primary" id="startBtn">
+              <span class="btn-icon">🔍</span>
+              <span class="btn-text">Start Scan</span>
+            </button>
+            <button class="btn btn-secondary" id="stopBtn" disabled>
+              <span class="btn-icon">⏹️</span>
+              <span class="btn-text">Stop</span>
+            </button>
+          </div>
+
+          <!-- Info Message -->
+          <div class="info-message" id="infoMessage">
+            <p>📱 Place your finger on the fingerprint sensor to measure your heart rate</p>
+          </div>
+
+          <!-- Results Section -->
+          <div class="results" id="results" style="display: none;">
+            <div class="result-item">
+              <span class="result-label">Average BPM:</span>
+              <span class="result-value" id="avgBpm">--</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Heart Rate Zone:</span>
+              <span class="result-value" id="zone">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+          <p>💡 Tip: Keep your finger steady for accurate readings</p>
+        </footer>
+      </div>
 
       <script src="/ppg.js"></script>
     </main>
